@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <title>Pokemon</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row ">
+            <div class="col text-center mt-3">
+                <h2>¡Saca Pokemons!</h2>
+                <h3>El que saque 3 Pokemons gana</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-auto mx-auto mt-5">
+                <table class="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <td id="1"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                        <td id="2"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                        <td id="3"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                        <td id="4"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                      </tr>
+                      <tr>
+                        <td id="5"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                        <td id="6"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                        <td id="7"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                        <td id="8"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                      </tr>
+                      <tr>
+                        <td id="9"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                        <td id="10"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                        <td id="11"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                        <td id="12"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                      </tr>
+                      <tr>
+                        <td id="13"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                        <td id="14"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                        <td id="15"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                        <td id="16"><img src="images/pokeball.png" alt="Pokeball" onclick="juego(this)"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-auto mx-auto">
+            <button class="btn btn-success" style="display: none;" id="reinicio" onclick="reinicio()">Volver a jugar</button>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-6 mt-3">
+                <h3 id="miPuntu">Tu puntuacion: </h3>
+            </div>
+            <div class="col-6 mt-3">
+                <h3 id="suPuntu">Puntuacion del ordenador: </h3>
+            </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-auto mx-auto">
+            <button class="btn btn-success" style="display: none;" id="repesca" onclick="pity()">Otro intento</button>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-auto mx-auto">
+            <h3 style="display: none;" id="texto">HISTORICO DEL VEGAGAME</h3>
+            <label for="input" id="label" style="display: none;">Introduce tu nombre</label>
+            <input type="text" id="input" style="display: none;">
+            <button class="btn btn-success " id="botonInsertar" style="display: none;" onclick="insertarNombre()">Insertar</button>
+            <h4 style="display: none;" id="historico"></h4>
+          </div>
+        </div>
+    </div>
+<script>
+    var pokemonsPersona = 0;
+    var pokemonsOrdenador = 0;
+    var tiradasPersona = 0;
+    var tiradasOrdenador = 0;
+
+    //Sacamos al azar las 5 posiciones donde se ponen los pokemon
+    var numeros = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+    var randomIndex = Math.floor(Math.random() * numeros.length);
+    var random1 = numeros[randomIndex];
+    numeros.splice(randomIndex, 1);
+    var randomIndex = Math.floor(Math.random() * numeros.length);
+    var random2 = numeros[randomIndex];
+    numeros.splice(randomIndex, 1);
+    var randomIndex = Math.floor(Math.random() * numeros.length);
+    var random3 = numeros[randomIndex];
+    numeros.splice(randomIndex, 1);
+    var randomIndex = Math.floor(Math.random() * numeros.length);
+    var random4 = numeros[randomIndex];
+    numeros.splice(randomIndex, 1);
+    var randomIndex = Math.floor(Math.random() * numeros.length);
+    var random5 = numeros[randomIndex];
+    numeros.splice(randomIndex, 1);
+    console.log(random1, random2, random3, random4, random5);
+
+    //Ponemos los marcadores a 0
+    document.getElementById("miPuntu").innerHTML += pokemonsPersona;
+    document.getElementById("suPuntu").innerHTML += pokemonsOrdenador;
+
+    //Segundo array para calcular las celdas clickadas
+    var numeros2 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+
+    //Funcion que recibe la imagen que ha sido pulsada, la cambia dependiendo de si es un pokemon o no y cambia los contadores si es necesario
+    function juego(imagenClickada) {
+      var rutaImagen = imagenClickada.src;
+      var idCelda = imagenClickada.parentNode.id;
+      //Deshabilitamos la imagen
+      imagenClickada.onclick = null;
+      var idString = idCelda.toString();
+      //Si el id de la celda contenedora es uno de los numeros que contienen los pokemon, se cambia la imagen a un pokemon, sino, se cambia a la pokeball vacia
+      if (idString == random1 || idString == random2 || idString == random3 || idString == random4 || idString == random5) {
+        imagenClickada.src = "images/charizard.png";
+        pokemonsPersona++;
+        tiradasPersona++;
+        var texto = document.getElementById("miPuntu").innerText;
+        var textoSinNumero = texto.charAt(texto.length - 2);
+        var textoFinal = textoSinNumero + "" + pokemonsPersona;
+        document.getElementById("miPuntu").innerHTML = "Tu puntuacion: " + textoFinal;
+        //Eliminamos del segundo array para controlar que no se repitan los valores cuando vaya a escoger el ordenador
+        var indiceAEliminar = numeros2.indexOf(parseInt(idCelda));
+        if (indiceAEliminar !== -1) {
+          numeros2.splice(indiceAEliminar, 1);
+          console.log("Array después de eliminar el número:", numeros2);
+        }
+        //Si ha sacado 3 pokemon, llamamos a la funcion de final de partida
+        if (pokemonsPersona == 3){
+          victoria();
+        }
+        console.log(tiradasPersona);
+      } else {
+        imagenClickada.src = "images/pokeballAbierta.png";
+        tiradasPersona++;
+        console.log(tiradasPersona);
+        //Eliminamos del segundo array para controlar que no se repitan los valores cuando vaya a escoger el ordenador
+        var indiceAEliminar = numeros2.indexOf(parseInt(idCelda));
+        if (indiceAEliminar !== -1) {
+          numeros2.splice(indiceAEliminar, 1);
+          console.log("Array después de eliminar el número:", numeros2);
+        }
+        //Mostramos el boton que da la segunda oportunidad
+        document.getElementById("repesca").style.display = "block";
+        
+      }
+    }
+
+    function derrota() {
+      alert("FIN DE LA PARTIDA");
+      //Deshabilitamos el resto de imagenes
+      for (let i = 0; i < numeros2.length; i++) {
+        var hijos = document.getElementById(numeros2[i]).children;
+        var hijo = hijos[0];
+        hijo.onclick = null;
+        document.getElementById("texto").style.display = "block";
+        document.getElementById("historico").innerHTML = "CPU -> " + tiradasOrdenador + "<br>";
+        document.getElementById("historico").style.display = "block";
+        document.getElementById("reinicio").style.display = "block";
+      }
+    }
+
+    function victoria() {
+      alert("ENHORABUENA, HAS GANADO");
+      //Deshabilitamos el resto de imagenes
+      for (let i = 0; i < numeros2.length; i++) {
+        var hijos = document.getElementById(numeros2[i]).children;
+        var hijo = hijos[0];
+        hijo.onclick = null;
+        document.getElementById("texto").style.display = "block";
+        document.getElementById("label").style.display = "block";
+        document.getElementById("input").style.display = "block";
+        document.getElementById("botonInsertar").style.display = "block";
+      }
+    }
+
+    //Funcion que se encarga de mostrar el nombre del usuario ganador y sus tiradas
+    function insertarNombre() {
+      var texto = document.getElementById("input").value;
+      document.getElementById("historico").innerHTML += texto + " -> " + tiradasPersona + " tiradas" + "<br>";
+      document.getElementById("historico").style.display = "block";
+      document.getElementById("label").style.display = "none";
+      document.getElementById("input").style.display = "none";
+      document.getElementById("botonInsertar").style.display = "none";
+      document.getElementById("reinicio").style.display = "block";
+    }
+
+    //Funcion que reinicia todos los valores para volver a jugar
+    function reinicio() {
+
+      document.getElementById("reinicio").style.display = "none";
+
+      pokemonsPersona = 0;
+      pokemonsOrdenador = 0;
+      tiradasPersona = 0;
+      tiradasOrdenador = 0;
+
+      var numeros = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+      var randomIndex = Math.floor(Math.random() * numeros.length);
+      var random1 = numeros[randomIndex];
+      numeros.splice(randomIndex, 1);
+      var randomIndex = Math.floor(Math.random() * numeros.length);
+      var random2 = numeros[randomIndex];
+      numeros.splice(randomIndex, 1);
+      var randomIndex = Math.floor(Math.random() * numeros.length);
+      var random3 = numeros[randomIndex];
+      numeros.splice(randomIndex, 1);
+      var randomIndex = Math.floor(Math.random() * numeros.length);
+      var random4 = numeros[randomIndex];
+      numeros.splice(randomIndex, 1);
+      var randomIndex = Math.floor(Math.random() * numeros.length);
+      var random5 = numeros[randomIndex];
+      numeros.splice(randomIndex, 1);
+
+      //Ponemos los marcadores a 0
+      document.getElementById("miPuntu").innerHTML = "Tu puntuacion: " + pokemonsPersona;
+      document.getElementById("suPuntu").innerHTML = "Puntuacion del ordenador: " + pokemonsOrdenador;
+
+      //Segundo array para calcular las celdas clickadas
+      var numeros2 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+
+
+    }
+
+    //Funcion donde nos apiadamos del usuario que ha fallado y le dejamos tirar el dado para otra oportunidad
+    function pity() {
+      var numeroAlAzar = Math.floor(Math.random() * 6) + 1;
+      //Si coincide en el 6, le damos otra tirada
+      if (numeroAlAzar == 6) {
+        alert("Ha salido el 6. Tienes otra tirada.");
+      } else {
+        alert("Ha salido el " + numeroAlAzar + ". Turno del ordenador.");
+        turnoOrdenador();
+      }
+      //Ocultamos el boton que da la segunda oportunidad
+      document.getElementById("repesca").style.display = "none";
+    }
+
+    //Funcion que hace que el ordenador escoja una casilla al azar
+    function turnoOrdenador() {
+      //Cojemos un indice aleatorio, lo almacenamos y nos lo cargamos del array para que no pueda volver a aparecer
+      var randomIndex = Math.floor(Math.random() * numeros2.length);
+      var random = numeros2[randomIndex];
+      numeros2.splice(randomIndex, 1);
+      console.log(numeros2);
+      //Repetimos el codigo de arriba
+      if (random == random1 || random == random2 || random == random3 || random == random4 || random == random5) {
+        //Children devuelve un array, como en este caso solo tiene un elemento, es siempre 0
+        var hijos = document.getElementById(random).children;
+        var hijo = hijos[0];
+        hijo.onclick = null;
+        hijo.src = "images/charizard.png";
+        pokemonsOrdenador++;
+        tiradasOrdenador++;
+        var texto = document.getElementById("suPuntu").innerText;
+        var textoSinNumero = texto.charAt(texto.length - 2);
+        var textoFinal = textoSinNumero + "" + pokemonsOrdenador;
+        document.getElementById("suPuntu").innerHTML = "Puntuacion del ordenador: " + textoFinal;
+        //Si ha sacado 3 pokemon, llamamos a la funcion de final de partida
+        if (pokemonsOrdenador == 3){
+          derrota();
+        }
+        
+      } else {
+        var hijos = document.getElementById(random).children;
+        var hijo = hijos[0];
+        hijo.onclick = null;
+        hijo.src = "images/pokeballAbierta.png";
+        tiradasOrdenador++;
+      }
+    }
+
+</script>
+</body>
+</html>
